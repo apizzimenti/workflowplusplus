@@ -4,7 +4,7 @@ SCALES=(3 4 6 8 11 16 23)
 TOPDIMENSION=4
 PLAQUETTEDIMENSION=2
 
-rm -f current.timestamps.txt
+rm -f jobs.running.txt
 
 for SCALE in "${SCALES[@]}"; do
 	for ((i=0; i < $COPIES; i++)); do
@@ -12,7 +12,7 @@ for SCALE in "${SCALES[@]}"; do
 		# directory for the output, write the timestamp to timestamps.txt
 		rn=$(date +%s)
 		mkdir -p output/tape/$rn
-		echo $rn >> current.timestamps.txt
+		echo $rn >> jobs.running.txt
 
 		# Kick off a screen job, but WAIT UNTIL IT COMPLETES before starting a
 		# new one, since there aren't a sufficient number of threads to accommodate
@@ -29,6 +29,6 @@ for SCALE in "${SCALES[@]}"; do
 			wait $!
 		done
 
-		echo $rn >> completed.txt
+		echo $rn >> jobs.done.txt
 	done
 done

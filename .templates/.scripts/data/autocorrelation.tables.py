@@ -6,7 +6,7 @@ import sys, json
 from pathlib import Path
 
 ROOT = Path("../../")
-with open(ROOT/"completed.txt") as f: STAMPS = [s.strip() for s in f.readlines()]
+with open(ROOT/"jobs.done.txt") as f: STAMPS = [s.strip() for s in f.readlines()]
 
 # Set the scaling constant for determining the optimal rectangular cutoff.
 c = 6

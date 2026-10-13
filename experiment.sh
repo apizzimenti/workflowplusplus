@@ -211,22 +211,22 @@ echo "## \`$experiment\`" >> $directory/summary.md
 
 
 ##################################################################################
-## Create `update.sh` and `retrieve.sh` files for pushing/pulling files to/from ##
+## Create `push.sh` and `pull.sh` files for pushing/pulling files to/from ##
 ## *only this experiment's directory* on the remote machine. The files included ##
 ## and ignored are configured in hidden .hopper, .hopper.ignore and .pangolin,  ##
 ## .pangolin.ignore files. Please ensure you've traded SSH keys with your       ##
 ## remote machines, as these files expect to find SSH keys attached.            ##
 ##################################################################################
-footer="$(cat $TEMPLATE/.update.sh)"
+footer="$(cat $TEMPLATE/.push.sh)"
 footer="${footer}\n\nrsync \$OPTIONS \$IGNORE ./ \$REMOTEUSER@\$REMOTELOCATION:\$REMOTEROOT/${experiment}"
-echo "$footer" >> $directory/update.sh
-chmod +x $directory/update.sh
+echo "$footer" >> $directory/push.sh
+chmod +x $directory/push.sh
 
-footer="$(cat $TEMPLATE/.retrieve.sh)"
+footer="$(cat $TEMPLATE/.pull.sh)"
 footer="${footer}\nrsync \$OPTIONS \$REMOTEUSER@\$REMOTELOCATION:\$REMOTEROOT/${experiment}/output/statistics/ ./output/statistics/"
-footer="${footer}\nrsync \$OPTIONS \$REMOTEUSER@\$REMOTELOCATION:\$REMOTEROOT/${experiment}/completed.txt ./completed.txt"
-echo "$footer" >> $directory/retrieve.sh
-chmod +x $directory/retrieve.sh
+footer="${footer}\nrsync \$OPTIONS \$REMOTEUSER@\$REMOTELOCATION:\$REMOTEROOT/${experiment}/jobs.done.txt ./jobs.done.txt"
+echo "$footer" >> $directory/pull.sh
+chmod +x $directory/pull.sh
 
 
 

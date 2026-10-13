@@ -4,6 +4,8 @@ OS := $(shell uname)
 tbb =
 etc =
 
+host = pangolin
+
 # Suppress make "helpful" messages.
 MAKEFLAGS += --no-print-directory
 
@@ -16,9 +18,9 @@ endif
 .PHONY: clean build
 
 reset-simulations: clean
-	@$(RM) current.timestamps.txt
+	@$(RM) jobs.running.txt
 	@$(RM) -rf output/tape/*
-	@$(RM) completed.txt
+	@$(RM) jobs.done.txt
 
 clean:
 	@$(RM) simulate *.o
@@ -35,5 +37,5 @@ test: reset-simulations
 
 
 simulate: reset-simulations build
-	@./simulation.manager.megltower.sh
+	@./simulation.manager.$(host).sh
 

@@ -15,7 +15,7 @@ TEST = False
 if not OUT.exists(): OUT.mkdir()
 
 try:
-	with open(ROOT/"completed.txt") as f: STAMPS = [s.strip() for s in f.readlines()]
+	with open(ROOT/"jobs.done.txt") as f: STAMPS = [s.strip() for s in f.readlines()]
 	assert len(STAMPS) > 0
 	assert not TEST
 except:

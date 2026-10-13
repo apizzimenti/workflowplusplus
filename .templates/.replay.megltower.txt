@@ -1,5 +1,5 @@
 
-completed=completed.txt
+completed=jobs.done.txt
 mkdir -p output/statistics
 
 # Provides arguments for the replay from file.

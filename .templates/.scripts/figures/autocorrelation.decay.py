@@ -11,7 +11,7 @@ CONFIG = autocorrelation.decay
 ROOT = Path("./../../")
 STATS = ROOT/"output/statistics"
 OUT = ROOT/"output/figures"
-with open(ROOT/"completed.txt") as f: STAMPS = [s.strip() for s in f.readlines()]
+with open(ROOT/"jobs.done.txt") as f: STAMPS = [s.strip() for s in f.readlines()]
 
 statistics = ["energy", "occupancy"]
 

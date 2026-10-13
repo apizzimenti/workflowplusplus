@@ -17,11 +17,14 @@ scripts
 *hopper*
 *pangolin*
 
-update.sh
-retrieve.sh
+.megltower
+.megltower.ignore
+
+push.sh
+pull.sh
 summary.md
 
 simulate
 
-completed.txt
-current.timestamps.txt
+jobs.done.txt
+jobs.active.txt
