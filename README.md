@@ -21,11 +21,11 @@ Creating a streamlined workflow for designing and executing experiments using [A
 2. **Configure your access file.** Whenever you create a new experiment, the workflow makes copies of the `.<remote>` and `.<remote>.ignore` files that respectively specify how to log into the remote machine and which files to ignore when exchanging files with it. Your `.<remote>` file should read like
 
 	```
-	REMOTEUSER=anthony					(username on remote host)
-	REMOTELOCATION=gmu-pangolin			(ssh keyname for remote host)
-	REMOTEHOST=pangolin					(remote host name)
-	USEREMAIL=apizzime					(GMU email prefix, on Hopper only)
-	REMOTEROOT="~"						(remote experiments directory prefix)
+	REMOTEUSER=anthony				(username on remote host)
+	REMOTELOCATION=gmu-pangolin		(ssh keyname for remote host)
+	REMOTEHOST=pangolin				(remote host name)
+	USEREMAIL=apizzime				(GMU email prefix, on Hopper only)
+	REMOTEROOT="~"					(remote experiments directory prefix)
 	```
 
 3. **Create your experiment.** Currently, this workflow supports the following [ATEAMS++ models](https://apizzimenti.github.io/ATEAMSplusplus/namespace_a_t_e_a_m_s_1_1models.html):
@@ -51,7 +51,7 @@ Creating a streamlined workflow for designing and executing experiments using [A
 5. **Configure your experiment.** The `simulation.pangolin.sh` file executes (a configurable number of repetitions of) your experiment at varying lattice scales. At the top of the `simulation.pangolin.sh` file, you'll find the following variables:
 
 	```zsh
-	COPIES=${1:-1}				# copies at each scale; default 1
+	COPIES=${1:-2}				# copies at each scale; default 1
 	SCALES=(3 4 6 8 11 16 23)	# lattice scales
 	TOPDIMENSION=4				# dimension of ambient complex/torus
 	PLAQUETTEDIMENSION=2		# dimension of sampled subcomplexes
@@ -82,12 +82,13 @@ Creating a streamlined workflow for designing and executing experiments using [A
 	int t=0;
 
 	using State = models::ModelState<Model::RingType,Model::VectorType>;
+	double cells = (double)C.Cells[params.dimension];
 
 	for (State STATE : M.simulate()) {
 		...
 
 		spins.rows[t] = STATE.cochain;	// keep the same type
-		occupancy[t] = (double)STATE.includes.size()/(double)C.Cells[params.dimension]; // transform!
+		occupancy[t] = STATE.includes.size()/cells; // transform!
 		t++;
 
 		...

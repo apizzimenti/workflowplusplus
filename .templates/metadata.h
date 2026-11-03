@@ -75,8 +75,8 @@ std::string estimatedTTC(std::chrono::time_point<std::chrono::system_clock> star
 	const std::chrono::duration<double> _estimated{((now-start)/t)*N};
 	const auto [estimateddays, estimatedhours, estimatedminutes, estimatedseconds] = ttcDays(_estimated);
 
-	std::string elapsed = std::format("{}d:{:02}h:{:02}m:{:02}s", elapseddays.count(), elapsedhours.count(), elapsedminutes.count(), elapsedseconds.count());
-	std::string estimated = std::format("{}d:{:02}h:{:02}m:{:02}s", estimateddays.count(), estimatedhours.count(), estimatedminutes.count(), estimatedseconds.count());
+	std::string elapsed = std::format("{:3}d:{:02}h:{:02}m:{:02}s", elapseddays.count(), elapsedhours.count(), elapsedminutes.count(), elapsedseconds.count());
+	std::string estimated = std::format("{:3}d:{:02}h:{:02}m:{:02}s", estimateddays.count(), estimatedhours.count(), estimatedminutes.count(), estimatedseconds.count());
 
 	int pct = (int)((double)t/(double)N * 100);
 	int width = std::log10(N)+1;
@@ -97,7 +97,7 @@ struct METADATA {
 	inline void ttc(auto start, auto end) {
 		const std::chrono::duration<double> elapsed{end-start};
 		const auto [days, hours, minutes, seconds] = ttcDays(elapsed);
-		TTC = std::format("{:03}d:{:02}h:{:02}m:{:02}s", days.count(), hours.count(), minutes.count(), seconds.count());
+		TTC = std::format("{}d:{:02}h:{:02}m:{:02}s", days.count(), hours.count(), minutes.count(), seconds.count());
 	}
 
 	inline void localize(std::string TEST) {
