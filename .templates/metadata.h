@@ -9,6 +9,8 @@
 #include <chrono>
 #include <map>
 #include <filesystem>
+#include <cmath>
+#include <iostream>
 
 // Source - https://stackoverflow.com/a/78276118
 // Posted by idbrii
@@ -74,9 +76,12 @@ std::string estimatedTTC(std::chrono::time_point<std::chrono::system_clock> star
 	const auto [estimateddays, estimatedhours, estimatedminutes, estimatedseconds] = ttcDays(_estimated);
 
 	std::string elapsed = std::format("{}d:{:02}h:{:02}m:{:02}s", elapseddays.count(), elapsedhours.count(), elapsedminutes.count(), elapsedseconds.count());
-	std::string estimated = std::format("{}d:{:02}h:{:02}m:{:02}s", estimateddays.count(), estimatedhours.count(), estimatedminutes.count(), estimatedseconds.count());	
+	std::string estimated = std::format("{}d:{:02}h:{:02}m:{:02}s", estimateddays.count(), estimatedhours.count(), estimatedminutes.count(), estimatedseconds.count());
 
-	return std::format("{}/{}", t, N) + " ———— " + elapsed + " ———— " + estimated + "\r";
+	int pct = (int)((double)t/(double)N * 100);
+	int width = std::log10(N)+1;
+
+	return std::format("{:{}}/{} ({:3}%)", t, width, N, pct) + " ———— " + elapsed + " ———— " + estimated + "\r";
 }
 
 
@@ -91,7 +96,8 @@ struct METADATA {
 
 	inline void ttc(auto start, auto end) {
 		const std::chrono::duration<double> elapsed{end-start};
-		TTC = std::format("{}d:{:%Hh:%Mm:%Ss}", std::chrono::duration_cast<std::chrono::days>(elapsed).count(), elapsed);
+		const auto [days, hours, minutes, seconds] = ttcDays(elapsed);
+		TTC = std::format("{:03}d:{:02}h:{:02}m:{:02}s", days.count(), hours.count(), minutes.count(), seconds.count());
 	}
 
 	inline void localize(std::string TEST) {

@@ -84,6 +84,7 @@ int main(int argc, char* argv[]) {
 	META.PARAMETERS["TOPDIMENSION"] = TOPDIMENSION;
 	META.PARAMETERS["PLAQUETTEDIMENSION"] = PLAQUETTEDIMENSION;
 	META.PARAMETERS["SCALE"] = SCALE;
+	META.PARAMETERS["ITERATIONS"] = N;
 
 	// Localize the time; compute the time-to-completion; write to file.
 	META.ttc(start, end);

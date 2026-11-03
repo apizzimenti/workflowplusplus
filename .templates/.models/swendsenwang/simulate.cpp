@@ -55,15 +55,17 @@ int main(int argc, char* argv[]) {
 	Chain CHAIN(&MODEL, N);
 
 	// Data storage.
-	SparseMatrix<Model::RingType> spins(N, COMPLEX.Cells[PARAMETERS.dimension-1]);
-	vector<double> occupancy(N);
+	vector<int> energy(N);
+	vector<int> occupied(N);
+	vector<int> satisfied(N);
 
 	int t=0;
 	auto start = chrono::high_resolution_clock::now();
 
 	for (State STATE : CHAIN.simulate()) {
-		spins.rows[t] = STATE.cochain;
-		occupancy[t] = (double)STATE.includes.size()/(double)COMPLEX.Cells[PARAMETERS.dimension];
+		energy[t] = STATE.energy;
+		occupied[t] = STATE.occupied;
+		satisfied[t] = STATE.satisfied;
 		t++;
 
 		// Fake a progress bar.
@@ -77,8 +79,9 @@ int main(int argc, char* argv[]) {
 	// metadata file before compressing; otherwise, the script errors, since
 	// the files are so big.
 	ATEAMS::DataWriter writer;
-	writer.write(spins, std::format("output/tape/{}/{}.txt", TIMESTAMP, "spins"));
-	writer.write(occupancy, std::format("output/tape/{}/{}.txt", TIMESTAMP, "occupancy"));
+	writer.write(occupied, std::format("output/tape/{}/{}.txt", TIMESTAMP, "occupied"));
+	writer.write(satisfied, std::format("output/tape/{}/{}.txt", TIMESTAMP, "satisfied"));
+	writer.write(energy, std::format("output/tape/{}/{}.txt", TIMESTAMP, "energy"));
 
 	// Add the parameters we care about to the metadata.
 	META.MODEL = MODEL.name;
@@ -86,6 +89,8 @@ int main(int argc, char* argv[]) {
 	META.PARAMETERS["TOPDIMENSION"] = TOPDIMENSION;
 	META.PARAMETERS["PLAQUETTEDIMENSION"] = PLAQUETTEDIMENSION;
 	META.PARAMETERS["SCALE"] = SCALE;
+	META.PARAMETERS["ITERATIONS"] = N;
+	META.PARAMETERS["TEMPERATURE"] = PARAMETERS.temperatureFunction(0);
 
 	// Localize the time; compute the time-to-completion; write to file.
 	META.ttc(start, end);

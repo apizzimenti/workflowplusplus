@@ -1,12 +1,33 @@
-# Run some default number of copies.
-COPIES=${1:-1}
-SCALES=(3 4 6 8 11 16 23)
+
+# Check whether all the metadata files exist.
+function metadataExists() {
+	local metadatas="$1"
+
+	for metadata in "${metadatas[@]}"; do
+		if [[ ! -f "$metadata" ]]; then
+			return 1
+		fi
+	done
+
+	return 0
+}
+
+
+# Run some default number of copies (two).
+COPIES=${1:-2}
+SCALES=(3 4 6 8 11 16 23 32)
 TOPDIMENSION=4
 PLAQUETTEDIMENSION=2
 
+# Remove the running jobs file.
 rm -f jobs.running.txt
 
 for SCALE in "${SCALES[@]}"; do
+
+	# Kick off all the copies at once.
+	copies=()
+	metadatas=()
+
 	for ((i=0; i < $COPIES; i++)); do
 		# Get the current timestamp (number of seconds since the epoch), make a
 		# directory for the output, write the timestamp to timestamps.txt
@@ -14,21 +35,25 @@ for SCALE in "${SCALES[@]}"; do
 		mkdir -p output/tape/$rn
 		echo $rn >> jobs.running.txt
 
-		# Kick off a screen job, but WAIT UNTIL IT COMPLETES before starting a
-		# new one, since there aren't a sufficient number of threads to accommodate
-		# multiple jobs at once. (This should make things go faster.)
-		screen -L -Logfile output/tape/$rn/simulation.log -dmS $experiment.simulation.$rn ./simulate $SCALE $TOPDIMENSION $PLAQUETTEDIMENSION $rn
+		copies+=("$rn")
+		metadatas+=("./output/tape/$rn/metadata.json")
 
-		until [[ -f ./output/tape/$rn/metadata.json ]]; do
-			sleep 5
+		# screen -L -Logfile output/tape/$rn/simulation.log -dmS $experiment.simulation.$rn ./simulate $SCALE $TOPDIMENSION $PLAQUETTEDIMENSION $rn
+		screen -dmS $experiment.simulation.$rn ./simulate $SCALE $TOPDIMENSION $PLAQUETTEDIMENSION $rn
+		sleep 1
+	done
+
+	# Wait until all the copies have finished, then compress data.
+	until metadataExists $metadatas; do
+		sleep 5
+	done
+
+	for loc in "${copies[@]}"; do
+		# Once done, fill out the subdirectories.
+		for x in output/tape/$loc/*.txt; do
+			gzip --best $x
 		done
 
-		# Zip all the files in the directory.
-		for x in output/tape/$rn/*.txt; do
-			gzip --best $x &
-			wait $!
-		done
-
-		echo $rn >> jobs.done.txt
+		echo $loc >> jobs.done.txt
 	done
 done
