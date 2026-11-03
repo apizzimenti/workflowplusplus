@@ -77,7 +77,6 @@ Creating a streamlined workflow for designing and executing experiments using [A
 	At each iteration of the Markov chain, the `Model` will update a [`ModelState`](https://apizzimenti.github.io/ATEAMSplusplus/struct_a_t_e_a_m_s_1_1models_1_1_model_state.html) object, yielded by the `Chain` at each iteration. [The docs have information on what data is tracked by the `ModelState` object](https://apizzimenti.github.io/ATEAMSplusplus/struct_a_t_e_a_m_s_1_1models_1_1_model_state.html). However, the `Chain` does _not_ store the data for you: you'll have to keep track of it yourself. For example, the invaded-cluster model keeps track of the current cochain (spin configuration) and the indices of $`d`$-cells included in the current subcomplex in the `cochain` and `includes` properties, respectively. The default strategy for storing these data is to either keep them in a sparse/compressed format (e.g. a `SparseMatrix` for storing cochains of type `SparseVector`), or to transform them and store a smaller representation:
 
 	```c++
-	SparseMatrix<Model::RingType> spins(N, C.Cells[params.dimension-1]);
 	vector<double> occupancy(N);
 	int t=0;
 
@@ -87,10 +86,9 @@ Creating a streamlined workflow for designing and executing experiments using [A
 	for (State STATE : M.simulate()) {
 		...
 
-		spins.rows[t] = STATE.cochain;	// keep the same type
 		occupancy[t] = STATE.includes.size()/cells; // transform!
 		t++;
-
+		
 		...
 	}
 	```
