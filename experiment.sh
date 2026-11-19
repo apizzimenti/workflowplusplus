@@ -11,23 +11,56 @@
 
 TEMPLATE="./.templates"
 
-##############################################################################
-## When executed, takes the first argument as the name of the experiment;   ##
-## otherwise names the experiment after the current datetime. Takes the     ##
-## second argument as the model used.                                       ##
-##############################################################################
-experiment=""
+################################################################################
+## When executed, prompts the user to input information about the experiment. ##
+################################################################################
 
-if [ $# -eq 0 ]; then
-	experiment="$(date +%s)"
-	MODEL=bernoulli
-else
-	experiment=$1
-	MODEL=$(echo $2 | tr "[:upper:]" "[:lower:]")
-fi
+DIM="$(tput dim)"
+BOLD="$(tput bold)"
+STOP="$(tput sgr0)"
+
+dimface() {
+	printf "%s%s%s" "$(tput dim)" "$*" "$(tput sgr0)"
+}
+
+boldface() {
+	printf "%s%s%s" "$(tput bold)" "$*" "$(tput sgr0)"
+}
+
+
+width=15
+
+
+printf "%s %s\n\n" "$(boldface 'Creating a new workflow++ experiment.')" "$(dimface 'control + c to quit')"
+
+# Experiment name.
+experiment="test"
+printf "%-${width}s ${DIM}%s${STOP}${BOLD}\r" "name" $experiment
+tput hpa $(( width + 1 ))
+read -r userinput
+experiment="${userinput:-$experiment}"
+printf "${STOP}"
+
+# Experiment model.
+MODEL="Bernoulli"
+printf "%-${width}s ${DIM}%s${STOP}${BOLD}\r" "model" $MODEL
+tput hpa $(( width + 1 ))
+read -r userinput
+MODEL="${userinput:-$MODEL}"
+MODEL=$(echo $MODEL | tr "[:upper:]" "[:lower:]")
+printf "${STOP}"
+
+# Experiment destination.
+directory="./experiments++/${experiment}"
+printf "%-${width}s ${DIM}%s${STOP}${BOLD}\r" "destination" $directory
+tput hpa $(( width + 1 ))
+read -r userinput
+directory="${userinput:-$directory}"
+printf "${STOP}"
 
 directory="./experiments++/$experiment"
 mkdir -p $directory
+
 
 ########################################################################
 ## Load arguments from the outer config file to get the user's email. ##
@@ -229,6 +262,7 @@ echo "$footer" >> $directory/pull.sh
 chmod +x $directory/pull.sh
 
 
+printf "\ncreated experiment ${BOLD}%s${STOP} with model ${BOLD}%s${STOP} at ${BOLD}%s${STOP}\n" "${experiment}" "${MODEL}" "${directory}"
 
 
 ##################################################################################

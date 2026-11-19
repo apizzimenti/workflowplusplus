@@ -2,4 +2,4 @@ REMOTEUSER=apizzime
 REMOTELOCATION=gmu-megltower
 REMOTEHOST=megltower
 USEREMAIL=apizzime
-REMOTEROOT="~/projects/magnetization++/experiments++"
+REMOTEROOT="~/experiments++/"
