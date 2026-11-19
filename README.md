@@ -44,10 +44,10 @@ Creating a streamlined workflow for designing and executing experiments using [A
 	control + c to quit, enter to use default value
 
 	name            test
-	model           Bernoulli
+	model           InvadedCluster
 	destination     ./experiments++/test
 
-	created experiment test with model bernoulli at ./experiments++/test
+	created experiment test with model invadedcluster at ./experiments++/test
 	```
 
 	This creates an `experiments++` directory (if it doesn't already exist) and an `experiments++/test` directory containing template files for conducting experiments with the `InvadedCluster` algorithm.
