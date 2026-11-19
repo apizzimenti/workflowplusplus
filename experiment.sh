@@ -31,7 +31,7 @@ boldface() {
 width=15
 
 
-printf "%s %s\n\n" "$(boldface 'Creating a new workflow++ experiment.')" "$(dimface 'control + c to quit')"
+printf "%s\n%s\n\n" "$(boldface 'Creating a new workflow++ experiment.')" "$(dimface 'control + c to quit, enter to use default value')"
 
 # Experiment name.
 experiment="test"

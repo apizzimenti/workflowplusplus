@@ -1,7 +1,7 @@
 
 ## What's this repository for?
 
-Creating a streamlined workflow for designing and executing experiments using [ATEAMS++](https://github.com/apizzimenti/ATEAMSplusplus) on remote machines — specifically, [GMU ORC's Hopper high-performance compute cluster](https://wiki.orc.gmu.edu/mkdocs/Hopper_Quick_Start_Guide/), our Lab's Pangolin workstation, or [MEGL](https://megl.science.gmu.edu/)'s MEGLtower workstation. **This workflow is currently compatible with ATEAMS++ version 1.8.**
+Creating a streamlined workflow for designing and executing experiments using [ATEAMS++](https://github.com/Random-Geometry-Lab/ATEAMSplusplus) on remote machines — specifically, [GMU ORC's Hopper high-performance compute cluster](https://wiki.orc.gmu.edu/mkdocs/Hopper_Quick_Start_Guide/), our Lab's Pangolin workstation, or [MEGL](https://megl.science.gmu.edu/)'s MEGLtower workstation. **This workflow is currently compatible with ATEAMS++ version 1.8.**
 
 ## How do I use it?
 
@@ -15,7 +15,7 @@ Creating a streamlined workflow for designing and executing experiments using [A
 
 1. **Clone the repo** to your local machine by
 	```zsh
-	$ git clone https://github.com/apizzimenti/magnetizationplusplus
+	$ git clone https://github.com/Random-Geometry-Lab/workflowplusplus
 	```
 
 2. **Configure your access file.** Whenever you create a new experiment, the workflow makes copies of the `.<remote>` and `.<remote>.ignore` files that respectively specify how to log into the remote machine and which files to ignore when exchanging files with it. Your `.<remote>` file should read like
@@ -28,18 +28,26 @@ Creating a streamlined workflow for designing and executing experiments using [A
 	REMOTEROOT="~"					(remote experiments directory prefix)
 	```
 
-3. **Create your experiment.** Currently, this workflow supports the following [ATEAMS++ models](https://apizzimenti.github.io/ATEAMSplusplus/namespace_a_t_e_a_m_s_1_1models.html):
+3. **Create your experiment.** Currently, this workflow supports the following [ATEAMS++ models](https://random-geometry-lab.github.io/ATEAMSplusplus/namespace_a_t_e_a_m_s_1_1models.html):
 
-	* [`InvadedCluster`](https://apizzimenti.github.io/ATEAMSplusplus/class_a_t_e_a_m_s_1_1models_1_1_invaded_cluster.html)
-	* [`SwendsenWang`](https://apizzimenti.github.io/ATEAMSplusplus/class_a_t_e_a_m_s_1_1models_1_1_swendsen_wang.html)
-	* [`Invasion`](https://apizzimenti.github.io/ATEAMSplusplus/class_a_t_e_a_m_s_1_1models_1_1_invasion.html)
-	* [`Bernoulli`](https://apizzimenti.github.io/ATEAMSplusplus/class_a_t_e_a_m_s_1_1models_1_1_bernoulli.html)
-	* [`Glauber`](https://apizzimenti.github.io/ATEAMSplusplus/class_a_t_e_a_m_s_1_1models_1_1_glauber.html)
+	* [`InvadedCluster`](https://random-geometry-lab.github.io/ATEAMSplusplus/class_a_t_e_a_m_s_1_1models_1_1_invaded_cluster.html)
+	* [`SwendsenWang`](https://random-geometry-lab.github.io/ATEAMSplusplus/class_a_t_e_a_m_s_1_1models_1_1_swendsen_wang.html)
+	* [`Invasion`](https://random-geometry-lab.github.io/ATEAMSplusplus/class_a_t_e_a_m_s_1_1models_1_1_invasion.html)
+	* [`Bernoulli`](https://random-geometry-lab.github.io/ATEAMSplusplus/class_a_t_e_a_m_s_1_1models_1_1_bernoulli.html)
+	* [`Glauber`](https://random-geometry-lab.github.io/ATEAMSplusplus/class_a_t_e_a_m_s_1_1models_1_1_glauber.html)
 
-	To create an experiment, navigate to the `magnetization` directory and run `./experiment <name> <model>`. For example, creating an experiment called `test` using the (e.g.) `InvadedCluster` ATEAMS++ model looks like
+	To create an experiment, navigate to the `magnetization` directory and run `./experiment`, and you'll be prompted to enter your experiment name, the model it simulates, and the desired destination (with defaults). For example, creating an experiment called `test` using the (e.g.) `InvadedCluster` ATEAMS++ model looks like
 
 	```zsh
-	$ ./experiment.sh test InvadedCluster
+	$ ./experiment.sh
+	Creating a new workflow++ experiment.
+	control + c to quit, enter to use default value
+
+	name            test
+	model           Bernoulli
+	destination     ./experiments++/test
+
+	created experiment test with model bernoulli at ./experiments++/test
 	```
 
 	This creates an `experiments++` directory (if it doesn't already exist) and an `experiments++/test` directory containing template files for conducting experiments with the `InvadedCluster` algorithm.
@@ -72,9 +80,9 @@ Creating a streamlined workflow for designing and executing experiments using [A
 	PARAMETERS.dimension = PLAQUETTEDIMENSION;
 	```
 
-	For more info on configuring each `Model`, [read the documentation](https://apizzimenti.github.io/ATEAMSplusplus/namespace_a_t_e_a_m_s_1_1models.html); each `Model` has a default set of parameters. **As of now, most `Model`s fail silently; if you forget a parameter that does not have a default value, the `Model` will not warn you.**
+	For more info on configuring each `Model`, [read the documentation](https://random-geometry-lab.github.io/ATEAMSplusplus/namespace_a_t_e_a_m_s_1_1models.html); each `Model` has a default set of parameters. **As of now, most `Model`s fail silently; if you forget a parameter that does not have a default value, the `Model` will not warn you.**
 
-	At each iteration of the Markov chain, the `Model` will update a [`ModelState`](https://apizzimenti.github.io/ATEAMSplusplus/struct_a_t_e_a_m_s_1_1models_1_1_model_state.html) object, yielded by the `Chain` at each iteration. [The docs have information on what data is tracked by the `ModelState` object](https://apizzimenti.github.io/ATEAMSplusplus/struct_a_t_e_a_m_s_1_1models_1_1_model_state.html). However, the `Chain` does _not_ store the data for you: you'll have to keep track of it yourself. For example, the invaded-cluster model keeps track of the current cochain (spin configuration) and the indices of $`d`$-cells included in the current subcomplex in the `cochain` and `includes` properties, respectively. The default strategy for storing these data is to either keep them in a sparse/compressed format (e.g. a `SparseMatrix` for storing cochains of type `SparseVector`), or to transform them and store a smaller representation:
+	At each iteration of the Markov chain, the `Model` will update a [`ModelState`](https://random-geometry-lab.github.io/ATEAMSplusplus/struct_a_t_e_a_m_s_1_1models_1_1_model_state.html) object, yielded by the `Chain` at each iteration. [The docs have information on what data is tracked by the `ModelState` object](https://random-geometry-lab.github.io/ATEAMSplusplus/struct_a_t_e_a_m_s_1_1models_1_1_model_state.html). However, the `Chain` does _not_ store the data for you: you'll have to keep track of it yourself. For example, the invaded-cluster model keeps track of the current cochain (spin configuration) and the indices of $`d`$-cells included in the current subcomplex in the `cochain` and `includes` properties, respectively. The default strategy for storing these data is to either keep them in a sparse/compressed format (e.g. a `SparseMatrix` for storing cochains of type `SparseVector`), or to transform them and store a smaller representation:
 
 	```c++
 	vector<double> occupancy(N);
