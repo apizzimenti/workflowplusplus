@@ -31,7 +31,7 @@ boldface() {
 width=15
 
 
-printf "%s\n%s\n\n" "$(boldface 'Creating a new workflow++ experiment.')" "$(dimface 'control + c to quit, enter to use default value')"
+printf "\n\n%s\n%s\n\n" "$(boldface 'Creating a new workflow++ experiment.')" "$(dimface 'control + c to quit, enter to use default value')"
 
 # Experiment name.
 experiment="test"
@@ -262,7 +262,7 @@ echo "$footer" >> $directory/pull.sh
 chmod +x $directory/pull.sh
 
 
-printf "\ncreated experiment ${BOLD}%s${STOP} with model ${BOLD}%s${STOP} at ${BOLD}%s${STOP}\n" "${experiment}" "${MODEL}" "${directory}"
+printf "\ncreated experiment ${BOLD}%s${STOP} with model ${BOLD}%s${STOP} at ${BOLD}%s${STOP}\n\n" "${experiment}" "${MODEL}" "${directory}"
 
 
 ##################################################################################
